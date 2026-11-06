@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نور الإسلام</title>
+<style>
+body {
+  margin: 0;
+  background: #071c19;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
+header {
+  background: #104b3c;
+  padding: 25px;
+}
+h1 { color: #e6c878; }
+.card {
+  background: #12372f;
+  margin: 15px;
+  padding: 20px;
+  border-radius: 15px;
+}
+button {
+  background: #d5b65c;
+  color: #10251e;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 17px;
+}
+#count { font-size: 35px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌙 نور الإسلام</h1>
+  <p>اذكر الله واطمئن قلبك</p>
+</header>
+
+<div class="card">
+  <h2>📖 القرآن الكريم</h2>
+  <p>اللهم اجعل القرآن ربيع قلوبنا</p>
+  <a href="https://quran.com/" target="_blank">
+    <button>اقرأ القرآن</button>
+  </a>
+</div>
+
+<div class="card">
+  <h2>📿 السبحة الإلكترونية</h2>
+  <p>سبحان الله وبحمده</p>
+  <div id="count">0</div>
+  <button onclick="increase()">سبّح</button>
+  <button onclick="resetCount()">تصفير</button>
+</div>
+
+<div class="card">
+  <h2>🤲 أذكار</h2>
+  <p>اللهم أعني على ذكرك وشكرك وحسن عبادتك</p>
+</div>
+
+<script>
+let count = 0;
+
+function increase() {
+  count++;
+  document.getElementById("count").innerText = count;
+}
+
+function resetCount() {
+  count = 0;
+  document.getElementById("count").innerText = count;
+}
+</script>
+
+</body>
+</html>
