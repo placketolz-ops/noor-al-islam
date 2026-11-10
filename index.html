@@ -1,0 +1,857 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#104b3c">
+<title>نور الإسلام</title>
+
+<style>
+:root {
+  --bg:#071c19;
+  --card:#12372f;
+  --head:#104b3c;
+  --gold:#e6c878;
+  --text:#ffffff;
+  --muted:#b8c9c1;
+  --paper:#dcebdc;
+  --paperText:#173c2d;
+}
+body.light {
+  --bg:#f3f5ed;
+  --card:#ffffff;
+  --head:#dcebe0;
+  --gold:#967323;
+  --text:#17352b;
+  --muted:#587064;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  text-align:center;
+  transition:.2s;
+}
+header {
+  background:var(--head);
+  padding:24px 12px;
+  border-bottom:2px solid var(--gold);
+}
+h1 {color:var(--gold);margin:5px}
+h2,h3 {color:var(--gold)}
+p {line-height:1.9}
+button,input,select {
+  font:inherit;
+  padding:11px 14px;
+  border-radius:10px;
+  max-width:100%;
+}
+button {
+  background:var(--gold);
+  color:#10251e;
+  border:0;
+  cursor:pointer;
+  font-weight:bold;
+  margin:4px;
+}
+button:disabled {opacity:.5;cursor:default}
+nav {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:4px;
+  padding:10px 5px;
+  background:var(--card);
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+nav button {font-size:12px}
+.card {
+  background:var(--card);
+  margin:12px auto;
+  padding:18px;
+  border-radius:16px;
+  max-width:760px;
+  border:1px solid #52706455;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:10px;
+}
+.tile {
+  background:var(--card);
+  padding:22px 8px;
+  border-radius:15px;
+  cursor:pointer;
+  border:1px solid #52706455;
+}
+.tile span {display:block;font-size:27px;margin-bottom:8px}
+.section {display:none;padding:8px}
+.section.active {display:block}
+.gold {color:var(--gold)}
+.muted {color:var(--muted)}
+.counter {font-size:40px;color:var(--gold);margin:12px}
+.dhikr {font-size:21px;line-height:2.1}
+input,select {
+  background:var(--bg);
+  color:var(--text);
+  border:1px solid #527064;
+  margin:5px;
+}
+.progress {
+  background:#526b5d;
+  height:12px;
+  border-radius:20px;
+  overflow:hidden;
+}
+.bar {
+  background:var(--gold);
+  height:100%;
+  width:0;
+  transition:.3s;
+}
+.small {font-size:13px;color:var(--muted)}
+footer {padding:25px;color:var(--gold)}
+
+/* ورقة المصحف */
+.mushaf-page {
+  background:linear-gradient(145deg,#dcebdc,#c9dfcb);
+  color:#173c2d;
+  border:5px double #b18b3d;
+  border-radius:12px;
+  padding:24px 17px;
+  margin:18px auto;
+  max-width:760px;
+  min-height:430px;
+  box-shadow:0 8px 25px #0005;
+  text-align:justify;
+  font-family:"Amiri","Noto Naskh Arabic",serif;
+  font-size:25px;
+  line-height:2.5;
+}
+.mushaf-title {
+  color:#174b36;
+  text-align:center;
+  font-size:26px;
+  font-weight:bold;
+  border-bottom:2px solid #b18b3d;
+  padding-bottom:12px;
+  margin-bottom:18px;
+}
+.mushaf-text {text-align:justify;line-height:2.5}
+.verse-number {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#805e18;
+  border:1px solid #b18b3d;
+  border-radius:50%;
+  width:29px;
+  height:29px;
+  font-size:14px;
+  margin:0 3px;
+  vertical-align:middle;
+  background:#edf3df;
+  cursor:pointer;
+}
+.mushaf-tools {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:5px;
+  margin:12px 0;
+}
+.mushaf-note {font-size:12px;color:var(--muted)}
+.ayah-page-label {
+  text-align:center;
+  color:#805e18;
+  border-top:1px solid #b18b3d;
+  margin-top:15px;
+  padding-top:8px;
+  font-size:14px;
+}
+audio {width:100%;margin:12px 0}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌙 نور الإسلام</h1>
+  <p>نورٌ يرافق يومك ويطمئن قلبك</p>
+  <button onclick="toggleTheme()">🌗 تغيير المظهر</button>
+</header>
+
+<nav>
+  <button onclick="show('home')">الرئيسية</button>
+  <button onclick="show('quran')">📖 القرآن</button>
+  <button onclick="show('morning')">☀️ الصباح</button>
+  <button onclick="show('evening')">🌙 المساء</button>
+  <button onclick="show('tasbeeh')">📿 التسبيح</button>
+  <button onclick="show('dua')">🤲 الدعاء</button>
+  <button onclick="show('favorites')">⭐ المفضلة</button>
+  <button onclick="show('stats')">📊 إنجازاتي</button>
+</nav>
+
+<main>
+
+<!-- الرئيسية -->
+<section id="home" class="section active">
+  <div class="card">
+    <h2>أهلاً بك في نور الإسلام ✨</h2>
+    <p>اجعل يومك عامرًا بذكر الله.</p>
+    <h3>🏅 إنجازك اليوم</h3>
+    <div id="homeStats"></div>
+    <div class="progress"><div class="bar" id="dailyBar"></div></div>
+    <p id="goalMessage" class="small"></p>
+    <button onclick="show('quran')">ابدأ القراءة 📖</button>
+  </div>
+
+  <div class="grid">
+    <div class="tile" onclick="show('quran')"><span>📖</span>القرآن الكريم</div>
+    <div class="tile" onclick="show('morning')"><span>☀️</span>أذكار الصباح</div>
+    <div class="tile" onclick="show('evening')"><span>🌙</span>أذكار المساء</div>
+    <div class="tile" onclick="show('tasbeeh')"><span>📿</span>السبحة الذكية</div>
+    <div class="tile" onclick="show('dua')"><span>🤲</span>الأدعية</div>
+    <div class="tile" onclick="show('favorites')"><span>⭐</span>المفضلة</div>
+  </div>
+
+  <div class="card">
+    <h3>📅 الورد اليومي</h3>
+    <p>حدد هدفك اليومي من الآيات.</p>
+    <input id="goal" type="number" min="1" max="1000" value="20">
+    <button onclick="saveGoal()">حفظ الهدف</button>
+  </div>
+
+  <div class="card">
+    <h3>🔔 تذكير الأذكار</h3>
+    <p>اختر تفعيل التذكير الصباحي والمسائي.</p>
+    <button onclick="enableReminder()">تفعيل التذكير</button>
+    <button onclick="disableReminder()">إيقاف التذكير</button>
+    <p class="small">التذكير يعمل أثناء بقاء الموقع مفتوحًا.</p>
+  </div>
+
+  <div class="card">
+    <h3>📖 متابعة القراءة</h3>
+    <p id="resumeText">لم تبدأ القراءة بعد.</p>
+    <button onclick="resumeReading()">متابعة القراءة</button>
+  </div>
+</section>
+
+<!-- القرآن -->
+<section id="quran" class="section">
+  <div class="card">
+    <h2>📖 القرآن الكريم</h2>
+    <p>مصحف بتصميم نور الإسلام</p>
+
+    <select id="surahSelect" onchange="loadSurah()">
+      <option value="">جاري تحميل السور...</option>
+    </select>
+
+    <div class="mushaf-tools">
+      <button onclick="changeFont(-2)">تصغير الخط</button>
+      <button onclick="changeFont(2)">تكبير الخط</button>
+      <button onclick="playSurah()">🎧 استمع للسورة</button>
+    </div>
+
+    <audio id="audioPlayer" controls style="display:none"></audio>
+
+    <div id="quranText"></div>
+    <p id="lastRead" class="small"></p>
+  </div>
+</section>
+
+<!-- أذكار الصباح -->
+<section id="morning" class="section">
+  <div class="card">
+    <h2>☀️ أذكار الصباح</h2>
+    <div id="morningList"></div>
+  </div>
+</section>
+
+<!-- أذكار المساء -->
+<section id="evening" class="section">
+  <div class="card">
+    <h2>🌙 أذكار المساء</h2>
+    <div id="eveningList"></div>
+  </div>
+</section>
+
+<!-- التسبيح -->
+<section id="tasbeeh" class="section">
+  <div class="card">
+    <h2>📿 السبحة الإلكترونية</h2>
+    <select id="tasbeehType" onchange="changeTasbeeh()">
+      <option>سبحان الله</option>
+      <option>الحمد لله</option>
+      <option>الله أكبر</option>
+      <option>أستغفر الله</option>
+      <option>سبحان الله وبحمده</option>
+      <option>لا إله إلا الله</option>
+    </select>
+    <div class="dhikr" id="tasbeehText">سبحان الله</div>
+    <div class="counter" id="count">0</div>
+    <button onclick="increase()">سبّح</button>
+    <button onclick="resetCount()">تصفير</button>
+  </div>
+</section>
+
+<!-- الدعاء -->
+<section id="dua" class="section">
+  <div class="card">
+    <h2>🤲 الأدعية</h2>
+    <input id="duaSearch" placeholder="ابحث عن دعاء..." oninput="searchDua()">
+    <div id="duaList"></div>
+  </div>
+</section>
+
+<!-- المفضلة -->
+<section id="favorites" class="section">
+  <div class="card">
+    <h2>⭐ المفضلة</h2>
+    <div id="favoriteList"></div>
+  </div>
+</section>
+
+<!-- الإحصائيات -->
+<section id="stats" class="section">
+  <div class="card">
+    <h2>📊 إحصائياتك اليومية</h2>
+    <h3>التسبيحات</h3>
+    <div class="counter" id="statCount">0</div>
+    <h3>الآيات التي سجلت قراءتها</h3>
+    <div class="counter" id="statAyahs">0</div>
+    <h3>الأذكار المكتملة</h3>
+    <div class="counter" id="statDhikr">0</div>
+    <h3>🏅 إنجازاتك</h3>
+    <div id="badges"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <h3>🌙 نور الإسلام</h3>
+  <p>اللهم اجعل هذا العمل نافعًا وخالصًا لوجهك الكريم.</p>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function get(key,fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    return value === null ? fallback : JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+function put(key,value) {
+  localStorage.setItem(key,JSON.stringify(value));
+}
+
+function show(id) {
+  document.querySelectorAll('.section').forEach(s =>
+    s.classList.remove('active')
+  );
+  $(id).classList.add('active');
+
+  if (id === 'favorites') renderFavorites();
+  if (id === 'stats') updateStats();
+
+  window.scrollTo(0,0);
+}
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    (d.getMonth()+1) + '-' + d.getDate();
+}
+
+function getStats() {
+  let s = get('stats',{});
+  if (s.date !== todayKey()) {
+    s = {date:todayKey(),tasbeeh:0,ayahs:0,dhikr:0};
+    put('stats',s);
+  }
+  return s;
+}
+
+function changeStat(key) {
+  const s = getStats();
+  s[key] = (s[key] || 0) + 1;
+  put('stats',s);
+  updateStats();
+}
+
+function updateStats() {
+  const s = getStats();
+  const goal = get('goal',20);
+  const progress = Math.min(100,Math.round(s.ayahs/goal*100));
+
+  $('statCount').textContent = s.tasbeeh;
+  $('statAyahs').textContent = s.ayahs;
+  $('statDhikr').textContent = s.dhikr;
+
+  $('dailyBar').style.width = progress + '%';
+  $('homeStats').textContent =
+    '📿 ' + s.tasbeeh + ' تسبيحة • 📖 ' +
+    s.ayahs + ' آية • 🤲 ' + s.dhikr + ' ذكر';
+
+  $('goalMessage').textContent =
+    'إنجاز الورد: ' + progress + '% (' +
+    s.ayahs + ' من ' + goal + ' آية)';
+
+  const badges = [];
+  if (s.tasbeeh >= 33) badges.push('🥉 33 تسبيحة');
+  if (s.tasbeeh >= 100) badges.push('🥈 100 تسبيحة');
+  if (s.ayahs >= goal) badges.push('🏅 أكملت وردك');
+  if (s.dhikr >= 10) badges.push('🌟 10 أذكار');
+
+  $('badges').textContent = badges.length
+    ? badges.join(' • ')
+    : 'واصل القراءة والذكر لتحقيق الإنجازات';
+}
+
+function saveGoal() {
+  const n = Number($('goal').value);
+  if (!Number.isInteger(n) || n < 1 || n > 1000) {
+    alert('اختر عددًا من 1 إلى 1000');
+    return;
+  }
+  put('goal',n);
+  updateStats();
+  alert('تم حفظ الورد اليومي');
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  put('lightMode',document.body.classList.contains('light'));
+}
+
+if (get('lightMode',false)) {
+  document.body.classList.add('light');
+}
+
+/* السبحة */
+let count = 0;
+
+function increase() {
+  count++;
+  $('count').textContent = count;
+  changeStat('tasbeeh');
+}
+
+function resetCount() {
+  count = 0;
+  $('count').textContent = count;
+}
+
+function changeTasbeeh() {
+  $('tasbeehText').textContent = $('tasbeehType').value;
+  resetCount();
+}
+
+/* الأذكار - أمثلة أولية */
+const morning = [
+  ['أصبحنا وأصبح الملك لله.',1],
+  ['اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك النشور.',1],
+  ['رضيت بالله ربًا وبالإسلام دينًا وبمحمد ﷺ نبيًا.',3],
+  ['سبحان الله وبحمده.',100]
+];
+
+const evening = [
+  ['أمسينا وأمسى الملك لله.',1],
+  ['اللهم بك أمسينا وبك أصبحنا وبك نحيا وبك نموت وإليك المصير.',1],
+  ['رضيت بالله ربًا وبالإسلام دينًا وبمحمد ﷺ نبيًا.',3],
+  ['سبحان الله وبحمده.',100]
+];
+
+function renderDhikr(list,id) {
+  const box = $(id);
+  box.innerHTML = '';
+
+  list.forEach(item => {
+    const text = item[0];
+    const target = item[1];
+    let n = 0;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const p = document.createElement('p');
+    p.className = 'dhikr';
+    p.textContent = text;
+
+    const info = document.createElement('p');
+    info.textContent = 'العدد: ' + target;
+
+    const counter = document.createElement('div');
+    counter.className = 'counter';
+    counter.textContent = '0';
+
+    const btn = document.createElement('button');
+    btn.textContent = 'تم الذكر';
+
+    btn.onclick = () => {
+      if (n >= target) return;
+      n++;
+      counter.textContent = n;
+
+      if (n === target) {
+        btn.textContent = 'اكتمل ✓';
+        btn.disabled = true;
+        changeStat('dhikr');
+      }
+    };
+
+    const fav = document.createElement('button');
+    fav.textContent = '⭐ المفضلة';
+    fav.onclick = () => addFavorite(text);
+
+    card.append(p,info,counter,btn,fav);
+    box.appendChild(card);
+  });
+}
+
+renderDhikr(morning,'morningList');
+renderDhikr(evening,'eveningList');
+
+/* الأدعية */
+const duas = [
+  'اللهم أعني على ذكرك وشكرك وحسن عبادتك.',
+  'ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار.',
+  'رب اغفر لي ولوالدي وللمؤمنين يوم يقوم الحساب.',
+  'رب اشرح لي صدري ويسر لي أمري.',
+  'اللهم إني أسألك العفو والعافية.'
+];
+
+function displayDuas(list) {
+  const box = $('duaList');
+  box.innerHTML = '';
+
+  list.forEach(text => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const p = document.createElement('p');
+    p.className = 'dhikr';
+    p.textContent = text;
+
+    const b = document.createElement('button');
+    b.textContent = '⭐ حفظ في المفضلة';
+    b.onclick = () => addFavorite(text);
+
+    card.append(p,b);
+    box.appendChild(card);
+  });
+}
+
+function searchDua() {
+  const q = $('duaSearch').value.trim();
+  displayDuas(duas.filter(d => d.includes(q)));
+}
+
+displayDuas(duas);
+
+/* المفضلة */
+function addFavorite(text) {
+  const list = get('favorites',[]);
+  if (list.includes(text)) {
+    alert('موجود بالفعل في المفضلة');
+    return;
+  }
+  list.push(text);
+  put('favorites',list);
+  alert('تم الحفظ ⭐');
+}
+
+function renderFavorites() {
+  const box = $('favoriteList');
+  box.innerHTML = '';
+  const list = get('favorites',[]);
+
+  if (!list.length) {
+    box.textContent = 'لم تحفظ أي شيء بعد.';
+    return;
+  }
+
+  list.forEach((text,index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const p = document.createElement('p');
+    p.className = 'dhikr';
+    p.textContent = text;
+
+    const b = document.createElement('button');
+    b.textContent = 'حذف';
+    b.onclick = () => {
+      list.splice(index,1);
+      put('favorites',list);
+      renderFavorites();
+    };
+
+    card.append(p,b);
+    box.appendChild(card);
+  });
+}
+
+/* القرآن */
+let currentSurah = null;
+let currentAudioList = [];
+let mushafFontSize = 25;
+
+function changeFont(amount) {
+  mushafFontSize = Math.max(18,Math.min(38,mushafFontSize+amount));
+  document.querySelectorAll('.mushaf-page').forEach(page => {
+    page.style.fontSize = mushafFontSize + 'px';
+  });
+}
+
+async function loadSurahs() {
+  try {
+    const response = await fetch(
+      'https://api.alquran.cloud/v1/surah'
+    );
+    const result = await response.json();
+
+    if (result.code !== 200) throw new Error();
+
+    $('surahSelect').innerHTML =
+      '<option value="">اختر السورة</option>';
+
+    result.data.forEach(surah => {
+      const option = document.createElement('option');
+      option.value = surah.number;
+      option.textContent = surah.number + ' - ' + surah.name;
+      $('surahSelect').appendChild(option);
+    });
+
+    const last = get('lastRead',null);
+    if (last) {
+      $('lastRead').textContent =
+        'آخر قراءة: ' + last.name + '، الآية ' + last.ayah;
+      $('resumeText').textContent =
+        'آخر موضع: ' + last.name + '، الآية ' + last.ayah;
+    }
+
+  } catch {
+    $('surahSelect').innerHTML =
+      '<option value="">تعذر تحميل السور، تحقق من الإنترنت</option>';
+  }
+}
+
+async function loadSurah() {
+  const number = $('surahSelect').value;
+  if (!number) return;
+
+  const box = $('quranText');
+  box.textContent = 'جاري تحميل السورة...';
+
+  $('audioPlayer').style.display = 'none';
+  currentAudioList = [];
+
+  try {
+    const [textResponse,audioResponse] = await Promise.all([
+      fetch('https://api.alquran.cloud/v1/surah/'+number+'/quran-uthmani'),
+      fetch('https://api.alquran.cloud/v1/surah/'+number+'/ar.alafasy')
+    ]);
+
+    const result = await textResponse.json();
+    const audioResult = await audioResponse.json();
+
+    if (result.code !== 200) throw new Error();
+
+    const surah = result.data;
+    currentSurah = surah;
+    currentAudioList =
+      audioResult.code === 200 ? audioResult.data.ayahs : [];
+
+    box.innerHTML = '';
+
+    // تقسيم الآيات حسب أرقام الصفحات التي يوفرها المصدر
+    const pages = {};
+
+    surah.ayahs.forEach(ayah => {
+      const pageNumber = ayah.page || 1;
+      if (!pages[pageNumber]) pages[pageNumber] = [];
+      pages[pageNumber].push(ayah);
+    });
+
+    Object.keys(pages).sort((a,b)=>Number(a)-Number(b))
+      .forEach(pageNumber => {
+        const page = document.createElement('div');
+        page.className = 'mushaf-page';
+
+        const title = document.createElement('div');
+        title.className = 'mushaf-title';
+        title.textContent = surah.name;
+
+        const text = document.createElement('div');
+        text.className = 'mushaf-text';
+
+        pages[pageNumber].forEach(ayah => {
+          const verse = document.createElement('span');
+          verse.textContent = ayah.text + ' ';
+
+          const marker = document.createElement('button');
+          marker.className = 'verse-number';
+          marker.textContent = ayah.numberInSurah;
+          marker.title = 'حفظ الآية في المفضلة';
+          marker.onclick = () => addFavorite(ayah.text);
+
+          text.appendChild(verse);
+          text.appendChild(marker);
+          text.appendChild(document.createTextNode(' '));
+        });
+
+        const pageLabel = document.createElement('div');
+        pageLabel.className = 'ayah-page-label';
+        pageLabel.textContent = 'صفحة ' + pageNumber;
+
+        page.append(title,text,pageLabel);
+        page.style.fontSize = mushafFontSize + 'px';
+        box.appendChild(page);
+      });
+
+    const last = get('lastRead',null);
+    $('lastRead').textContent =
+      'السورة الحالية: ' + surah.name +
+      (last && last.surah === Number(number)
+        ? ' - آخر موضع محفوظ: الآية ' + last.ayah : '');
+
+    put('lastOpenedSurah',Number(number));
+
+  } catch {
+    box.textContent =
+      'تعذر تحميل السورة. تحقق من اتصال الإنترنت وحاول مجددًا.';
+  }
+}
+
+/* تشغيل التلاوة */
+function playSurah() {
+  if (!currentAudioList.length) {
+    alert('اختر سورة أولاً وانتظر تحميلها.');
+    return;
+  }
+
+  const player = $('audioPlayer');
+  let index = 0;
+
+  player.style.display = 'block';
+
+  player.onended = () => {
+    index++;
+    if (index < currentAudioList.length) {
+      player.src = currentAudioList[index].audio;
+      player.play().catch(()=>{});
+    }
+  };
+
+  player.src = currentAudioList[0].audio;
+  player.play().catch(() => {
+    alert('اضغط تشغيل من مشغل الصوت.');
+  });
+}
+
+/* متابعة القراءة */
+function saveRead(surah,ayah) {
+  const data = {
+    name:surah.name,
+    surah:surah.number,
+    ayah:ayah.numberInSurah
+  };
+  put('lastRead',data);
+
+  $('lastRead').textContent =
+    'آخر قراءة: ' + data.name + '، الآية ' + data.ayah;
+
+  $('resumeText').textContent =
+    'آخر موضع: ' + data.name + '، الآية ' + data.ayah;
+}
+
+function resumeReading() {
+  const last = get('lastRead',null);
+  const number = last
+    ? last.surah
+    : get('lastOpenedSurah',1);
+
+  show('quran');
+  $('surahSelect').value = number;
+  loadSurah().then(() => {
+    if (last) {
+      $('lastRead').textContent =
+        'آخر موضع محفوظ: ' + last.name + '، الآية ' + last.ayah;
+    }
+  });
+}
+
+/* تذكير الأذكار */
+async function enableReminder() {
+  if (!('Notification' in window)) {
+    alert('المتصفح لا يدعم الإشعارات.');
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+
+  if (permission !== 'granted') {
+    alert('لم يتم السماح بالإشعارات.');
+    return;
+  }
+
+  put('reminderEnabled',true);
+  alert('تم تفعيل التذكير. سيعمل أثناء فتح الموقع.');
+}
+
+function disableReminder() {
+  put('reminderEnabled',false);
+  alert('تم إيقاف التذكير.');
+}
+
+function reminderCheck() {
+  if (!get('reminderEnabled',false)) return;
+
+  if (!('Notification' in window) ||
+      Notification.permission !== 'granted') return;
+
+  const now = new Date();
+  const hour = now.getHours();
+  const key = todayKey() + '-' + hour;
+  const sent = get('remindersSent',[]);
+
+  if ((hour === 8 || hour === 17) && !sent.includes(key)) {
+    new Notification('نور الإسلام 🌙',{
+      body:hour === 8
+        ? 'لا تنس أذكار الصباح'
+        : 'لا تنس أذكار المساء'
+    });
+
+    sent.push(key);
+    put('remindersSent',sent);
+  }
+}
+
+setInterval(reminderCheck,60000);
+
+/* تشغيل الموقع */
+$('goal').value = get('goal',20);
+updateStats();
+loadSurahs();
+</script>
+
+</body>
+</html>
+<footer class="site-footer">
+  <div class="footer-decoration">☪</div>
+  <p>مع تحيات صانع الموقع</p>
+  <h2>عمر الوكيل</h2>
+  <span>صُنع بكل حب لخدمة الإسلام 🤍</span>
+</footer>
